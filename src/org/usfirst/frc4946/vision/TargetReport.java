@@ -14,7 +14,7 @@ public class TargetReport {
    
         public int verticalIndex;
         public int horizontalIndex;
-        public boolean Hot;
+        public boolean Hot = false;
         public double totalScore = 0;
         public double leftScore = 0;
         public double rightScore = 0;
