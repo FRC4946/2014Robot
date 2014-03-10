@@ -13,6 +13,7 @@ import edu.wpi.first.wpilibj.image.CriteriaCollection;
 import edu.wpi.first.wpilibj.image.NIVision;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.image.NIVisionException;
+import edu.wpi.first.wpilibj.image.ParticleAnalysisReport;
 import org.usfirst.frc4946.DistanceSensor;
 import org.usfirst.frc4946.IntakeArm;
 import org.usfirst.frc4946.Launcher;
@@ -32,6 +33,7 @@ public class AutoVision_MoveAndShoot extends AutoMode {
     int counter = 0;
     int atDistanceCount = 0;
     TargetReport m_target = new TargetReport();
+    
     Vision m_vision = new Vision();
     
     AxisCamera camera;          // the axis camera object (connected to the switch)
@@ -96,6 +98,14 @@ public class AutoVision_MoveAndShoot extends AutoMode {
                 m_vision.detectTargets(image);
                 m_target = m_vision.getBestTarget(image);
                 
+                // If the target is more than ~6.5 feet to the side, assume it is on the other side of the goal and flip our HOT flag.
+                
+                
+                /******************************************************* NEEDS TESTING!!!!! *******************************************************/
+                double distance = m_vision.getDistance(image, m_target);
+                if(distance>11){
+                    m_target.Hot = !m_target.Hot;
+                }
             }
             try {
                 image.free();

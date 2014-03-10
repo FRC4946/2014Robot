@@ -185,4 +185,18 @@ public class Vision {
         return bestTarget;
 
     }
+    
+    public double getDistance(BinaryImage image, TargetReport target) {
+        ParticleAnalysisReport distanceReport;
+        double distance = 0;
+        try {
+            distanceReport = image.getParticleAnalysisReport(target.verticalIndex);
+            distance = m_functions.computeDistance(image, distanceReport, target.verticalIndex);
+
+        } catch (NIVisionException ex) {
+            ex.printStackTrace();
+        }
+
+        return distance;
+    }
 }
