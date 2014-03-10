@@ -13,6 +13,7 @@ import edu.wpi.first.wpilibj.image.CriteriaCollection;
 import edu.wpi.first.wpilibj.image.NIVision;
 import edu.wpi.first.wpilibj.image.NIVisionException;
 import edu.wpi.first.wpilibj.image.ParticleAnalysisReport;
+import edu.wpi.first.wpilibj.image.RGBImage;
 
 /**
  *
@@ -38,8 +39,8 @@ public class Vision {
         BinaryImage filteredImage = null;
 
         try {
-            ColorImage image = camera.getImage();     // comment if using stored images
-            //ColorImage image = new RGBImage("/testImage.jpg");		// get the sample image from the cRIO flash
+            //ColorImage image = camera.getImage();     // comment if using stored images
+            ColorImage image = new RGBImage("/testImage.jpg");		// get the sample image from the cRIO flash
 
             BinaryImage thresholdImage = image.thresholdHSV(105, 137, 230, 255, 133, 183);   // keep only green objects
             filteredImage = thresholdImage.particleFilter(criteria);           // filter out small particles
@@ -49,8 +50,8 @@ public class Vision {
 
         } catch (NIVisionException ex) {
             ex.printStackTrace();
-        } catch (AxisCameraException ex) {        // this is needed if the camera.getImage() is called
-            ex.printStackTrace();
+ //       } catch (AxisCameraException ex) {        // this is needed if the camera.getImage() is called
+ //           ex.printStackTrace();
         }
         return filteredImage;
 
