@@ -54,7 +54,7 @@ public class AutoVision_MoveAndShoot extends AutoMode {
         cc = new CriteriaCollection();      // create the criteria for the particle filter
         cc.addCriteria(NIVision.MeasurementType.IMAQ_MT_AREA, VisionConstants.AREA_MINIMUM, 65535, false);
                 
-        initGyroSensor();
+        //initGyroSensor();
         
         step = 0;
         counter = 0;
