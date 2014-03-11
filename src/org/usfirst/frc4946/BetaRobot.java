@@ -77,16 +77,16 @@ public class BetaRobot extends SimpleRobot {
 
         //AutoTwoBall m_routine = new AutoTwoBall(m_robotDrive, m_launcher, m_loader, m_intakeArm, m_distanceSensor);
         //AutoShootAndDrive m_routine = new AutoShootAndDrive(m_robotDrive,m_launcher,m_loader,m_intakeArm,m_distanceSensor);
-        AutoMoveAndShoot m_routine = new AutoMoveAndShoot(m_robotDrive,m_launcher,m_loader,m_intakeArm,m_distanceSensor);
+        AutoVision_MoveAndShoot m_routine = new AutoVision_MoveAndShoot(m_robotDrive,m_launcher,m_loader,m_intakeArm,m_distanceSensor);
         //AutoMove m_routine = new AutoMove(m_robotDrive,m_launcher,m_loader,m_intakeArm,m_distanceSensor);
         int m_cycleNumber = 0;
         m_routine.init();
-
+        
         while (isAutonomous() && isEnabled()) {
 
             m_cycleNumber++;
             m_routine.run();
-
+            
             if ((m_cycleNumber % RobotConstants.CONSOLE_UPDATE_TIME) == 0) {
 
                 m_driverStation.updateLCD();
@@ -114,10 +114,10 @@ public class BetaRobot extends SimpleRobot {
             m_cycleNumber++;
 
             //Call the drive oriented code
-            operatorDriveSystem();
+            //operatorDriveSystem();
 
             //Call the task oriented code
-            operatorTaskSystem();
+            //operatorTaskSystem();
 
             m_driverStation.println(RobotConstants.LCD_RANGE, 1, "Range: " + m_distanceSensor.getRangeInchs() + "\"            ");
 

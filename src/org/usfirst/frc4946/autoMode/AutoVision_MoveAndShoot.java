@@ -50,7 +50,7 @@ public class AutoVision_MoveAndShoot extends AutoMode {
         m_timer.reset();
         m_timer.start();
         
-        camera = AxisCamera.getInstance();  // get an instance of the camera
+        //camera = AxisCamera.getInstance();  // get an instance of the camera
         cc = new CriteriaCollection();      // create the criteria for the particle filter
         cc.addCriteria(NIVision.MeasurementType.IMAQ_MT_AREA, VisionConstants.AREA_MINIMUM, 65535, false);
                 
@@ -70,42 +70,46 @@ public class AutoVision_MoveAndShoot extends AutoMode {
     public void run() {
         m_launcher.update();
         counter++;
-        m_driverStation.println(RobotConstants.AUTO_LCD_INTAKE, 1, "Dist " + m_distanceSensor.getRangeInchs()+"                          ");
+        //m_driverStation.println(RobotConstants.AUTO_LCD_INTAKE, 1, "Dist " + m_distanceSensor.getRangeInchs()+"                          ");
         if (step == 0) {
-            driveToDistance(9 * 12, 0.8);
+            //driveToDistance(9 * 12, 0.8);
 
-        }
+        
 
-        if (atDistance(9 * 12) && step == 0) {
-            atDistanceCount++;
-            if (atDistanceCount > 2) {
-                drive(0.0, 0.0);
-            }
-        } else {
-            atDistanceCount = 0;
+        //if (atDistance(9 * 12) && step == 0) {
+        //    atDistanceCount++;
+        //    if (atDistanceCount > 2) {
+        //        drive(0.0, 0.0);
+        //    }
+        //} else {
+        //    atDistanceCount = 0;
+        //
+        //}
 
-        }
-
-        if (atDistanceCount > 10 && step == 0) {
+        //if (atDistanceCount > 10 && step == 0) {
             step = 1;
-            drive(0.0, 0.0);
-            counter = 0;
-            m_driverStation.println(RobotConstants.AUTO_LCD_LAUNCHER, 1, "AT DIS & SPEED               ");
-            
+        //    drive(0.0, 0.0);
+        //    counter = 0;
+        //    m_driverStation.println(RobotConstants.AUTO_LCD_LAUNCHER, 1, "AT DIS & SPEED               ");
+        //    
             BinaryImage image = m_vision.getFilteredImage(camera, cc);
             if (m_vision.areParticles(image)) {
                 
                 m_vision.detectTargets(image);
                 m_target = m_vision.getBestTarget(image);
                 
+                m_driverStation.println(RobotConstants.AUTO_LCD_LAUNCHER,1,"Tape: "+m_target.tapeWidthScore);
+                m_driverStation.println(RobotConstants.AUTO_LCD_INTAKE,1,"Height: "+m_target.verticalScore);                
+                
+                m_driverStation.updateLCD();
                 // If the target is more than ~6.5 feet to the side, assume it is on the other side of the goal and flip our HOT flag.
                 
                 
                 /******************************************************* NEEDS TESTING!!!!! *******************************************************/
-                double distance = m_vision.getDistance(image, m_target);
-                if(distance>11){
-                    m_target.Hot = !m_target.Hot;
-                }
+                //double distance = m_vision.getDistance(image, m_target);
+                //if(distance>11){
+                //    m_target.Hot = !m_target.Hot;
+                //}
             }
             try {
                 image.free();
@@ -116,6 +120,8 @@ public class AutoVision_MoveAndShoot extends AutoMode {
         }
 
         if (step == 1 && counter > 100) {
+            
+            //m_driverStation.println(RobotConstants.AUTO_LCD_LAUNCHER, 1, "IsHot: "+m_target.Hot+"                      ");
             
             // If the target is hot, GO GO GO!!!
             if (m_target.Hot) {

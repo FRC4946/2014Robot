@@ -42,9 +42,13 @@ public class Vision {
             //ColorImage image = camera.getImage();     // comment if using stored images
             ColorImage image = new RGBImage("/testImage.jpg");		// get the sample image from the cRIO flash
 
-            BinaryImage thresholdImage = image.thresholdHSV(105, 137, 230, 255, 133, 183);   // keep only green objects
+            BinaryImage thresholdImage = image.thresholdHSV(10, 60, 200, 255, 200, 255);   // keep only green objects
+            //BinaryImage thresholdImage = image.thresholdRGB(0, 45, 25, 255, 0, 47);
+            thresholdImage.write("/threshold2.bmp");
             filteredImage = thresholdImage.particleFilter(criteria);           // filter out small particles
+            filteredImage.write("/filtered2.bmp");
 
+            
             thresholdImage.free();
             image.free();
 
@@ -71,6 +75,7 @@ public class Vision {
             image.free();
         } catch (NIVisionException ex) {
             ex.printStackTrace();
+            
         }
         return numberOfParticles > 0;
     }
@@ -174,15 +179,16 @@ public class Vision {
                     bestTarget.verticalScore = curTarget.verticalScore;
                 }
             }
-            //Determine if the best target is a Hot target
-            bestTarget.Hot = m_functions.hotOrNot(bestTarget);
+
         }
         try {
             image.free();
         } catch (NIVisionException ex) {
             ex.printStackTrace();
         }
-        
+
+        //Determine if the best target is a Hot target
+        bestTarget.Hot = m_functions.hotOrNot(bestTarget);
         return bestTarget;
 
     }
