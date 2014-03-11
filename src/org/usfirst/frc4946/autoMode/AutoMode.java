@@ -24,19 +24,20 @@ public abstract class AutoMode {
     Loader m_loader;
     IntakeArm m_intakeArm;
     DistanceSensor m_distanceSensor;
+    Gyro m_gyro;
     protected DriverStationLCD m_driverStation = DriverStationLCD.getInstance();
-    
-    Gyro m_gyro = new Gyro(RobotConstants.GYRO_SENSOR);
 
-    AutoMode(RobotDrive drive, Launcher launcher, Loader loader, IntakeArm intakeArm, DistanceSensor distanceSensor) {
+
+    AutoMode(RobotDrive drive, Launcher launcher, Loader loader, IntakeArm intakeArm, DistanceSensor distanceSensor, Gyro gyro) {
         m_robotDrive = drive;
         m_launcher = launcher;
         m_loader = loader;
         m_intakeArm = intakeArm;
         m_distanceSensor = distanceSensor;
+        m_gyro = gyro;
     }
-
-    public void initGyroSensor() {
+    
+    protected void resetGyro(){
         m_gyro.reset();
     }
     

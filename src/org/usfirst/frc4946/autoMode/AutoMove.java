@@ -10,6 +10,7 @@ import org.usfirst.frc4946.IntakeArm;
 import org.usfirst.frc4946.Launcher;
 import org.usfirst.frc4946.Loader;
 import org.usfirst.frc4946.RobotConstants;
+import edu.wpi.first.wpilibj.Gyro;
 
 /**
  *
@@ -17,12 +18,12 @@ import org.usfirst.frc4946.RobotConstants;
  */
 public class AutoMove extends AutoMode {
     
-    public AutoMove(RobotDrive drive, Launcher launcher, Loader loader, IntakeArm intakeArm, DistanceSensor distanceSensor) {
-        super(drive, launcher, loader, intakeArm, distanceSensor);
+    public AutoMove(RobotDrive drive, Launcher launcher, Loader loader, IntakeArm intakeArm, DistanceSensor distanceSensor, Gyro gyro) {
+        super(drive, launcher, loader, intakeArm, distanceSensor, gyro);
     }
 
     public void init() {
-        initGyroSensor();
+        resetGyro();
     }
 
     public void run() {
