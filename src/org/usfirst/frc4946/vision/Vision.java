@@ -40,13 +40,12 @@ public class Vision {
 
         try {
             //ColorImage image = camera.getImage();     // comment if using stored images
-            ColorImage image = new RGBImage("/testImage.jpg");		// get the sample image from the cRIO flash
-
-            BinaryImage thresholdImage = image.thresholdHSV(10, 60, 200, 255, 200, 255);   // keep only green objects
-            //BinaryImage thresholdImage = image.thresholdRGB(0, 45, 25, 255, 0, 47);
-            thresholdImage.write("/threshold2.bmp");
-            filteredImage = thresholdImage.particleFilter(criteria);           // filter out small particles
-            filteredImage.write("/filtered2.bmp");
+                ColorImage image;                           // next 2 lines read image from flash on cRIO
+                image = new RGBImage("/testImage.jpg");		// get the sample image from the cRIO flash
+                BinaryImage thresholdImage = image.thresholdHSV(90, 155, 65, 255, 90, 255);   // keep only green objects
+                //thresholdImage.write("/threshold.bmp");
+                filteredImage = thresholdImage.particleFilter(criteria);           // filter out small particles
+                //filteredImage.write("/filteredImage.bmp");
 
             
             thresholdImage.free();
@@ -87,6 +86,8 @@ public class Vision {
      * @param image The image to find targets in
      */
     public void detectTargets(BinaryImage image) {
+        horizontalTargetCount = verticalTargetCount = 0;
+
         try {
             for (int partID = 0; partID < VisionConstants.MAX_PARTICLES && partID < image.getNumberParticles(); partID++) {
                 ParticleAnalysisReport report = image.getParticleAnalysisReport(partID);
@@ -160,8 +161,7 @@ public class Vision {
     public TargetReport getBestTarget(BinaryImage image) {
 
         TargetReport bestTarget = new TargetReport();
-        //Reset the bestTarget scores, and set verticalIndex to first target in case there are no horizontal targets
-        bestTarget.totalScore = bestTarget.leftScore = bestTarget.rightScore = bestTarget.tapeWidthScore = bestTarget.verticalScore = 0;
+        //Set verticalIndex to first target in case there are no horizontal targets
         bestTarget.verticalIndex = verticalTargetList[0];
         for (int i = 0; i < verticalTargetCount; i++) {
             for (int j = 0; j < horizontalTargetCount; j++) {
@@ -178,6 +178,9 @@ public class Vision {
                     bestTarget.tapeWidthScore = curTarget.tapeWidthScore;
                     bestTarget.verticalScore = curTarget.verticalScore;
                 }
+                
+                //Determine if the best target is a Hot target
+                bestTarget.Hot = m_functions.hotOrNot(bestTarget);
             }
 
         }
@@ -187,8 +190,6 @@ public class Vision {
             ex.printStackTrace();
         }
 
-        //Determine if the best target is a Hot target
-        bestTarget.Hot = m_functions.hotOrNot(bestTarget);
         return bestTarget;
 
     }

@@ -34,7 +34,7 @@ public class AutoVision_MoveAndShoot extends AutoMode {
     int atDistanceCount = 0;
     TargetReport m_target = new TargetReport();
     
-    Vision m_vision = new Vision();
+    Vision m_vision;
     
     AxisCamera camera;          // the axis camera object (connected to the switch)
     CriteriaCollection cc;      // the criteria for doing the particle filter operation
@@ -96,6 +96,7 @@ public class AutoVision_MoveAndShoot extends AutoMode {
             if (m_vision.areParticles(image)) {
                 
                 m_vision.detectTargets(image);
+                m_target = new TargetReport(); // Reset all the values to default
                 m_target = m_vision.getBestTarget(image);
                 
                 m_driverStation.println(RobotConstants.AUTO_LCD_LAUNCHER,1,"Tape: "+m_target.tapeWidthScore);
