@@ -31,23 +31,21 @@ public class Vision {
     /**
      * Filter out everything but large green particles.
      * 
-     * @param camera The camera to get the image from
+     * @param camera Tshe camera to get the image from
      * @param criteria The image processing criteria
      * @return The binary, filtered image
      */
-    public BinaryImage getFilteredImage(AxisCamera camera, CriteriaCollection criteria) {
+    public BinaryImage getFilteredImage(CriteriaCollection criteria) {
         BinaryImage filteredImage = null;
 
         try {
             //ColorImage image = camera.getImage();     // comment if using stored images
-                ColorImage image;                           // next 2 lines read image from flash on cRIO
-                image = new RGBImage("/testImage.jpg");		// get the sample image from the cRIO flash
-                BinaryImage thresholdImage = image.thresholdHSV(90, 155, 65, 255, 90, 255);   // keep only green objects
-                //thresholdImage.write("/threshold.bmp");
-                filteredImage = thresholdImage.particleFilter(criteria);           // filter out small particles
-                //filteredImage.write("/filteredImage.bmp");
+            ColorImage image = new RGBImage("/testImage.jpg");		// get the sample image from the cRIO flash
+            BinaryImage thresholdImage = image.thresholdHSV(90, 155, 65, 255, 90, 255);   // keep only green objects
+            //thresholdImage.write("/threshold.bmp");
+            filteredImage = thresholdImage.particleFilter(criteria);           // filter out small particles
+            //filteredImage.write("/filteredImage.bmp");
 
-            
             thresholdImage.free();
             image.free();
 
