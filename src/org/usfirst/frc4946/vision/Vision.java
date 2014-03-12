@@ -54,6 +54,11 @@ public class Vision {
  //       } catch (AxisCameraException ex) {        // this is needed if the camera.getImage() is called
  //           ex.printStackTrace();
         }
+        
+        if(filteredImage == null){
+            System.out.print("\n\n\n\n\n**********************************************\nIMAGE IS A NULL!! OH NOES!!\n**********************************************\n\n\n\n");
+        }
+        
         return filteredImage;
 
 }
