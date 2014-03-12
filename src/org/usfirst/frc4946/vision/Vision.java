@@ -74,7 +74,7 @@ public class Vision {
 
         try {
             numberOfParticles = image.getNumberParticles();
-            image.free();
+            //image.free();
         } catch (NIVisionException ex) {
             ex.printStackTrace();
             
@@ -108,7 +108,7 @@ public class Vision {
                     verticalTargetList[verticalTargetCount++] = partID;  //Add particle to target array and increment count
                 }
             }
-            image.free();
+            //image.free();
         } catch (NIVisionException ex) {
             ex.printStackTrace();
         }
@@ -147,7 +147,7 @@ public class Vision {
             curTarget.totalScore += curTarget.tapeWidthScore + curTarget.verticalScore;
 
             
-            image.free();
+            //image.free();
         } catch (NIVisionException ex) {
             ex.printStackTrace();
         }
@@ -187,11 +187,11 @@ public class Vision {
             //Determine if the best target is a Hot target
             bestTarget.Hot = m_functions.hotOrNot(bestTarget);
         }
-        try {
-            image.free();
-        } catch (NIVisionException ex) {
-            ex.printStackTrace();
-        }
+//        try {
+//            image.free();
+//        } catch (NIVisionException ex) {
+//            ex.printStackTrace();
+//        }
 
         return bestTarget;
 
