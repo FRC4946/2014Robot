@@ -30,7 +30,7 @@ public class Vision {
 
     /**
      * Filter out everything but large green particles.
-     * 
+     *
      * @param camera The camera to get the image from
      * @param criteria The image processing criteria
      * @return The binary, filtered image
@@ -52,20 +52,20 @@ public class Vision {
         } catch (NIVisionException ex) {
             ex.printStackTrace();
  //       } catch (AxisCameraException ex) {        // this is needed if the camera.getImage() is called
- //           ex.printStackTrace();
+            //           ex.printStackTrace();
         }
-        
-        if(filteredImage == null){
+
+        if (filteredImage == null) {
             System.out.print("\n\n\n\n\n**********************************************\nIMAGE IS A NULL!! OH NOES!!\n**********************************************\n\n\n\n");
         }
-        
+
         return filteredImage;
 
-}
+    }
 
     /**
      * Check if there are any particles in the image
-     * 
+     *
      * @param image The image to find particles in
      * @return If there are any particles in the given image
      */
@@ -74,10 +74,8 @@ public class Vision {
 
         try {
             numberOfParticles = image.getNumberParticles();
-            //image.free();
         } catch (NIVisionException ex) {
             ex.printStackTrace();
-            
         }
         return numberOfParticles > 0;
     }
@@ -85,7 +83,7 @@ public class Vision {
     /**
      * Look at all the particles in the image, and determine if they are targets
      * or not. Then, determine if they are vertical or horizontal targets
-     * 
+     *
      * @param image The image to find targets in
      */
     public void detectTargets(BinaryImage image) {
@@ -108,7 +106,6 @@ public class Vision {
                     verticalTargetList[verticalTargetCount++] = partID;  //Add particle to target array and increment count
                 }
             }
-            //image.free();
         } catch (NIVisionException ex) {
             ex.printStackTrace();
         }
@@ -117,7 +114,7 @@ public class Vision {
     /**
      * Report the scores of the given pair of targets. Scores are used to
      * determine the best target.
-     * 
+     *
      * @param image The image to find targets in
      * @param vertTarget The ID of the vertical target
      * @param horizTarget The ID of the horizontal target
@@ -146,8 +143,6 @@ public class Vision {
             curTarget.totalScore = curTarget.leftScore > curTarget.rightScore ? curTarget.leftScore : curTarget.rightScore;
             curTarget.totalScore += curTarget.tapeWidthScore + curTarget.verticalScore;
 
-            
-            //image.free();
         } catch (NIVisionException ex) {
             ex.printStackTrace();
         }
@@ -157,7 +152,7 @@ public class Vision {
 
     /**
      * Look at all the targets, and decide which is the best one
-     * 
+     *
      * @param image The image to find targets in
      * @return The report of the best target
      */
@@ -181,22 +176,13 @@ public class Vision {
                     bestTarget.tapeWidthScore = curTarget.tapeWidthScore;
                     bestTarget.verticalScore = curTarget.verticalScore;
                 }
-                
             }
-
             //Determine if the best target is a Hot target
             bestTarget.Hot = m_functions.hotOrNot(bestTarget);
         }
-//        try {
-//            image.free();
-//        } catch (NIVisionException ex) {
-//            ex.printStackTrace();
-//        }
-
         return bestTarget;
-
     }
-    
+
     public double getDistance(BinaryImage image, TargetReport target) {
         ParticleAnalysisReport distanceReport;
         double distance = 0;
