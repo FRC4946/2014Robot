@@ -31,11 +31,11 @@ public class Vision {
     /**
      * Filter out everything but large green particles.
      * 
-     * @param camera Tshe camera to get the image from
+     * @param camera The camera to get the image from
      * @param criteria The image processing criteria
      * @return The binary, filtered image
      */
-    public BinaryImage getFilteredImage(CriteriaCollection criteria) {
+    public BinaryImage getFilteredImage(AxisCamera camera, CriteriaCollection criteria) {
         BinaryImage filteredImage = null;
 
         try {

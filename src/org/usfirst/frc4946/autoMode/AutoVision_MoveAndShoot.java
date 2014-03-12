@@ -34,9 +34,9 @@ public class AutoVision_MoveAndShoot extends AutoMode {
     int atDistanceCount = 0;
     TargetReport m_target = new TargetReport();
     
-    Vision m_vision;
+    Vision m_vision = new Vision();
     
-    ///AxisCamera camera;          // the axis camera object (connected to the switch)
+    AxisCamera camera;          // the axis camera object (connected to the switch)
     CriteriaCollection cc;      // the criteria for doing the particle filter operation
 
     Timer m_timer = new Timer();
@@ -91,8 +91,8 @@ public class AutoVision_MoveAndShoot extends AutoMode {
         //    drive(0.0, 0.0);
         //    counter = 0;
         //    m_driverStation.println(RobotConstants.AUTO_LCD_LAUNCHER, 1, "AT DIS & SPEED               ");
-        //    s
-            BinaryImage image = m_vision.getFilteredImage(cc);
+        //    
+            BinaryImage image = m_vision.getFilteredImage(camera, cc);
             if (m_vision.areParticles(image)) {
                 
                 m_vision.detectTargets(image);
