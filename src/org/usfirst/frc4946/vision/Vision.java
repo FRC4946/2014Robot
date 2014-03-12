@@ -182,10 +182,10 @@ public class Vision {
                     bestTarget.verticalScore = curTarget.verticalScore;
                 }
                 
-                //Determine if the best target is a Hot target
-                bestTarget.Hot = m_functions.hotOrNot(bestTarget);
             }
 
+            //Determine if the best target is a Hot target
+            bestTarget.Hot = m_functions.hotOrNot(bestTarget);
         }
         try {
             image.free();
