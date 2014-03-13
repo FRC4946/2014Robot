@@ -39,19 +39,19 @@ public class Vision {
         BinaryImage filteredImage = null;
 
         try {
-            //ColorImage image = camera.getImage();     // comment if using stored images
-            ColorImage image = new RGBImage("/testImage.jpg");		// get the sample image from the cRIO flash
-            BinaryImage thresholdImage = image.thresholdHSV(90, 155, 65, 255, 90, 255);   // keep only green objects
-            //thresholdImage.write("/threshold.bmp");
+            ColorImage image = camera.getImage();     // comment if using stored images
+            //ColorImage image = new RGBImage("/testImage.jpg");		// get the sample image from the cRIO flash
+            BinaryImage thresholdImage = image.thresholdHSV(90, 170, 50, 255, 155, 255);   // keep only green objects
+            thresholdImage.write("/threshold.bmp");
             filteredImage = thresholdImage.particleFilter(criteria);           // filter out small particles
-            //filteredImage.write("/filteredImage.bmp");
+            filteredImage.write("/filteredImage.bmp");
 
             thresholdImage.free();
             image.free();
 
         } catch (NIVisionException ex) {
             ex.printStackTrace();
- //       } catch (AxisCameraException ex) {        // this is needed if the camera.getImage() is called
+        } catch (AxisCameraException ex) {        // this is needed if the camera.getImage() is called
             //           ex.printStackTrace();
         }
 

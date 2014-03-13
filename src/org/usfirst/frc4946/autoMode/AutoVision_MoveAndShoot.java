@@ -122,13 +122,13 @@ public class AutoVision_MoveAndShoot extends AutoMode {
             // If the target is hot, GO GO GO!!!
             if (m_target.Hot) {
                 extendLoader();
-                m_driverStation.println(RobotConstants.AUTO_LCD_LOADER, 1, "SHOOTING                       ");
+                m_driverStation.println(RobotConstants.AUTO_LCD_LOADER, 1, "SHOOTING1                       ");
             }
             
             // If the target was not hot, wait 5 seconds for the targets to switch and then GO GO GO!!!
             else if (!m_target.Hot && m_timer.get() > 5){
                 extendLoader();
-                m_driverStation.println(RobotConstants.AUTO_LCD_LOADER, 1, "SHOOTING                       ");
+                m_driverStation.println(RobotConstants.AUTO_LCD_LOADER, 1, "SHOOTING2                       ");
             }
             
             // Otherwise, DON'T GO YET!!!
