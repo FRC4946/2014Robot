@@ -13,6 +13,7 @@ import edu.wpi.first.wpilibj.Compressor;
 import edu.wpi.first.wpilibj.RobotDrive;
 import edu.wpi.first.wpilibj.SimpleRobot;
 import edu.wpi.first.wpilibj.Timer;
+import edu.wpi.first.wpilibj.camera.AxisCamera;
 
 /**
  * The VM is configured to automatically run this class, and to call the
@@ -37,6 +38,8 @@ public class BetaRobot extends SimpleRobot {
 
     Timer m_timer = new Timer();
     
+    AxisCamera camera;
+    
     // The first arg is the pressure switch, which will open at 115 psi and reclose at 95. It's value will be used to activate and deactivate the relay.
     // The second is the compressor's relay (The Spike module). It is what turns on and off the compressor.
     Compressor m_primaryCompressor = new Compressor(RobotConstants.COMPRESSOR_PRESSURE_SWITCH, RobotConstants.COMPRESSOR_RELAY);
@@ -53,7 +56,7 @@ public class BetaRobot extends SimpleRobot {
     protected void robotInit() {
         // Start the compressor, let it do it's thing. It will turn on and off automatically to regulate pressure.
         m_primaryCompressor.start();
-
+        camera = AxisCamera.getInstance();
     }
 
     /**
@@ -81,6 +84,8 @@ public class BetaRobot extends SimpleRobot {
         //AutoMove m_routine = new AutoMove(m_robotDrive,m_launcher,m_loader,m_intakeArm,m_distanceSensor);
         int m_cycleNumber = 0;
         m_routine.init();
+        
+        m_routine.giveCamera(camera);
         
         while (isAutonomous() && isEnabled()) {
 

@@ -49,7 +49,7 @@ public class AutoVision_MoveAndShoot extends AutoMode {
         m_timer.reset();
         m_timer.start();
         
-        camera = AxisCamera.getInstance();  // get an instance of the camera
+        //camera = AxisCamera.getInstance();  // get an instance of the camera
         cc = new CriteriaCollection();      // create the criteria for the particle filter
         cc.addCriteria(NIVision.MeasurementType.IMAQ_MT_AREA, VisionConstants.AREA_MINIMUM, 65535, false);
                 
@@ -139,4 +139,8 @@ public class AutoVision_MoveAndShoot extends AutoMode {
         }
     }
 
+    public void giveCamera(AxisCamera newCamera){
+        camera = newCamera;
+    }
+    
 }
