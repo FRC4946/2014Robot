@@ -6,6 +6,7 @@ package org.usfirst.frc4946.autoMode;
 
 import edu.wpi.first.wpilibj.DriverStationLCD;
 import edu.wpi.first.wpilibj.Gyro;
+import edu.wpi.first.wpilibj.PIDController;
 import edu.wpi.first.wpilibj.RobotDrive;
 import org.usfirst.frc4946.DistanceSensor;
 import org.usfirst.frc4946.IntakeArm;
@@ -25,8 +26,7 @@ public abstract class AutoMode {
     IntakeArm m_intakeArm;
     DistanceSensor m_distanceSensor;
     protected DriverStationLCD m_driverStation = DriverStationLCD.getInstance();
-    
-    //Gyro m_gyro = new Gyro(RobotConstants.GYRO_SENSOR);
+    Gyro m_gyro = new Gyro(RobotConstants.GYRO_SENSOR);
 
     AutoMode(RobotDrive drive, Launcher launcher, Loader loader, IntakeArm intakeArm, DistanceSensor distanceSensor) {
         m_robotDrive = drive;
@@ -37,11 +37,11 @@ public abstract class AutoMode {
     }
 
     public void initGyroSensor() {
-        //m_gyro.reset();
+       m_gyro.reset();
     }
-    
+
     protected boolean shooterIsAtTargetSpeed(double speed) {
-        return getCurrentShooterSpeed() >= (speed-50) && getCurrentShooterSpeed() <= (speed+50);
+        return getCurrentShooterSpeed() >= (speed - 50) && getCurrentShooterSpeed() <= (speed + 50);
 
     }
 
@@ -51,12 +51,12 @@ public abstract class AutoMode {
         if (currentDistance >= distance && RobotConstants.DISTANCE_SENSOR_RANGE <= Math.abs(currentDistance - distance)) {
             //double angle = m_gyro.getAngle();
             //double correctedAngle = angle*-0.03;
-            
-            drive(speed,0);
+
+            drive(speed, 0);
             //drive(speed, correctedAngle);
         }
         //if (currentDistance <= distance && RobotConstants.DISTANCE_SENSOR_RANGE <= Math.abs(currentDistance - distance)) {
-          //  drive(-speed, 0);
+        //  drive(-speed, 0);
         //}
 
     }
@@ -79,8 +79,26 @@ public abstract class AutoMode {
 
     }
 
-    public void turnToAngle() {
+    public boolean turnToAngle(double speed,int angle) {
         //needs work, potentially use the gyro,compass, combo part we have?
+        
+        // basic p controller for turning to the correct angle and not overshooting  
+        int threshold=2; //2 degree leanance 
+        
+        if(angle==m_gyro.getAngle()&&threshold>Math.abs(angle-m_gyro.getAngle())){
+            return true;
+        }
+        int p=(int) (speed/180);
+        p=(int) (Math.abs(angle-m_gyro.getAngle())*p);
+        if (angle>m_gyro.getAngle()+threshold){
+            drive(speed*p,-1);
+        }
+        if (angle<m_gyro.getAngle()-threshold){
+            drive(speed*p,1);
+        }
+         drive(speed,1);
+        
+        return false;
     }
 
     public void updateShooter(boolean closedLoop) {
@@ -119,7 +137,7 @@ public abstract class AutoMode {
         m_intakeArm.setExtended(true);
         m_intakeArm.updateSolenoids();
     }
-    
+
     public void retractArm() {
         m_intakeArm.setExtended(false);
         m_intakeArm.updateSolenoids();

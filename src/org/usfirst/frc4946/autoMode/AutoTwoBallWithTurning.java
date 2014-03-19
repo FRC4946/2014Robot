@@ -1,8 +1,8 @@
 /*
  * Autonumous routine:
- *    1. Drive to distance (drop intake to drag ball)
- *    2. Check hot(if hot shoot)
- *    3. Intake second ball
+ *    1. Shoot the first ball
+ *    2. Pick up second car
+ *    3. Shoot the second ball
  *    4. Move forwards, until 8 feet away
  */
 package org.usfirst.frc4946.autoMode;
@@ -27,7 +27,7 @@ import org.usfirst.frc4946.vision.VisionConstants;
  *
  * @author Stefan
  */
-public class AutoTwoBall extends AutoMode {
+public class AutoTwoBallWithTurning extends AutoMode {
 
     //AutoMode autoRoutine = new AutoMode(m_robotDrive, m_launcher, m_loader, m_intakeArm, m_distanceSensor);
     int step = -1;
@@ -44,7 +44,7 @@ public class AutoTwoBall extends AutoMode {
 
     Timer m_timer = new Timer();
 
-    public AutoTwoBall(RobotDrive drive, Launcher launcher, Loader loader, IntakeArm intakeArm, DistanceSensor distanceSensor) {
+    public AutoTwoBallWithTurning(RobotDrive drive, Launcher launcher, Loader loader, IntakeArm intakeArm, DistanceSensor distanceSensor) {
         super(drive, launcher, loader, intakeArm, distanceSensor);
     }
 
@@ -57,7 +57,7 @@ public class AutoTwoBall extends AutoMode {
         cc = new CriteriaCollection();      // create the criteria for the particle filter
         cc.addCriteria(NIVision.MeasurementType.IMAQ_MT_AREA, VisionConstants.AREA_MINIMUM, 65535, false);
 
-        //initGyroSensor();
+        initGyroSensor();
         step = -1;
         counter = 0;
         atDistanceCount = 0;
@@ -74,14 +74,19 @@ public class AutoTwoBall extends AutoMode {
         m_launcher.update();
         counter++;
         m_driverStation.println(RobotConstants.AUTO_LCD_INTAKE, 1, "Dist " + m_distanceSensor.getRangeInchs() + "                          ");
-        if (step == -1) {
+        if (step == -2) {
             enableRollers();
         }
         if (m_timer.get() > 0.1) {
-            step = 0;
+            step = -1;
+        }
+        if (step==-1){
+            if (turnToAngle(1,45)){
+                step=0;
+            }
         }
         if (step == 0) {
-            driveToDistance(9 * 12, 0.75);
+            driveToDistance(9 * 12, 0.4);
         }
 
         if (atDistance(9 * 12) && step == 0) {
