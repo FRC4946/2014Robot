@@ -24,20 +24,21 @@ public abstract class AutoMode {
     Loader m_loader;
     IntakeArm m_intakeArm;
     DistanceSensor m_distanceSensor;
+    Gyro m_gyro;
     protected DriverStationLCD m_driverStation = DriverStationLCD.getInstance();
-    
-    //Gyro m_gyro = new Gyro(RobotConstants.GYRO_SENSOR);
 
-    AutoMode(RobotDrive drive, Launcher launcher, Loader loader, IntakeArm intakeArm, DistanceSensor distanceSensor) {
+
+    AutoMode(RobotDrive drive, Launcher launcher, Loader loader, IntakeArm intakeArm, DistanceSensor distanceSensor, Gyro gyro) {
         m_robotDrive = drive;
         m_launcher = launcher;
         m_loader = loader;
         m_intakeArm = intakeArm;
         m_distanceSensor = distanceSensor;
+        m_gyro = gyro;
     }
-
-    public void initGyroSensor() {
-        //m_gyro.reset();
+    
+    protected void resetGyro(){
+        m_gyro.reset();
     }
     
     protected boolean shooterIsAtTargetSpeed(double speed) {
@@ -49,11 +50,10 @@ public abstract class AutoMode {
         double currentDistance = m_distanceSensor.getRangeInchs();
 
         if (currentDistance >= distance && RobotConstants.DISTANCE_SENSOR_RANGE <= Math.abs(currentDistance - distance)) {
-            //double angle = m_gyro.getAngle();
-            //double correctedAngle = angle*-0.03;
-            
-            drive(speed,0);
-            //drive(speed, correctedAngle);
+            double angle = m_gyro.getAngle();
+            double correctedAngle = angle*-0.03;
+
+            drive(speed, correctedAngle);
         }
         //if (currentDistance <= distance && RobotConstants.DISTANCE_SENSOR_RANGE <= Math.abs(currentDistance - distance)) {
           //  drive(-speed, 0);

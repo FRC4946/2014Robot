@@ -8,6 +8,7 @@
 
 package org.usfirst.frc4946.autoMode;
 
+import edu.wpi.first.wpilibj.Gyro;
 import edu.wpi.first.wpilibj.RobotDrive;
 import org.usfirst.frc4946.DistanceSensor;
 import org.usfirst.frc4946.IntakeArm;
@@ -25,13 +26,13 @@ public class AutoTwoBall extends AutoMode {
     int step = 0;
     int counter = 0;
 
-    public AutoTwoBall(RobotDrive drive, Launcher launcher, Loader loader, IntakeArm intakeArm, DistanceSensor distanceSensor) {
-        super(drive, launcher, loader, intakeArm, distanceSensor);
+    public AutoTwoBall(RobotDrive drive, Launcher launcher, Loader loader, IntakeArm intakeArm, DistanceSensor distanceSensor, Gyro gyro) {
+        super(drive, launcher, loader, intakeArm, distanceSensor, gyro);
     }
 
     public void init() {
         
-        initGyroSensor();
+        resetGyro();
         
         step = 0;
         counter = 0;
