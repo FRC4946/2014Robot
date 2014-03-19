@@ -8,6 +8,7 @@ package org.usfirst.frc4946;
 
 import org.usfirst.frc4946.autoMode.*;
 import edu.wpi.first.wpilibj.DriverStationLCD;
+import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.Compressor;
 import edu.wpi.first.wpilibj.Gyro;
@@ -31,7 +32,8 @@ public class BetaRobot extends SimpleRobot {
     Launcher m_launcher = new Launcher();
     Loader m_loader = new Loader();
     DistanceSensor m_distanceSensor = new DistanceSensor();
-
+    DigitalInput m_limitSwitch = new DigitalInput(RobotConstants.LIMIT_SWITCH);
+    
     Joystick m_driveJoystick = new Joystick(RobotConstants.JOYSTICK_LEFT);
     Joystick m_taskJoystick = new Joystick(RobotConstants.JOYSTICK_RIGHT);
 
@@ -55,6 +57,7 @@ public class BetaRobot extends SimpleRobot {
     double launcherSpeed = 0.0;
     double oldLauncherSpeed = 0.0;
     boolean speedIsPreset = false;
+    boolean limitSwitchIsDown = false;
 
     //This function called once at system start.
     protected void robotInit() {
@@ -175,9 +178,19 @@ public class BetaRobot extends SimpleRobot {
                 && buttonIntakeRollerIsDown == true) {
 
             buttonIntakeRollerIsDown = false;
-            
-                m_intakeArm.toggleEnabled();
-            
+            m_intakeArm.toggleEnabled();
+        }
+
+        // If the limit switch is pressed, stop the rollers
+        if (m_limitSwitch.get() && !limitSwitchIsDown) {
+            limitSwitchIsDown = true;
+            m_intakeArm.setEnabledRollers(false);
+        }
+
+        // If the limit switch is released, get ready for it to be pressed again
+        if (!m_limitSwitch.get() && limitSwitchIsDown) {
+
+            buttonIntakeRollerIsDown = false;
         }
 
         //********* LOADER *********\\
