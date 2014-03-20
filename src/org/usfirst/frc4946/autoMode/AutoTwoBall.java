@@ -1,6 +1,6 @@
 /*
  * Autonumous routine:
- *    1. Drive to distance (drop intake to drag ball)
+ *    1. Drive to distance (drop intake to drag/carry ball)
  *    2. Check hot(if hot shoot)
  *    3. Intake second ball
  *    4. Move forwards, until 8 feet away
@@ -114,7 +114,7 @@ public class AutoTwoBall extends AutoMode {
             }
             // end vision
         }
-        
+
         //shoot after ball has settled 
         //check the time we are shooting at and know if it's hot or not
         if (step == 1 && counter > 100) {
@@ -124,8 +124,7 @@ public class AutoTwoBall extends AutoMode {
                 m_driverStation.println(RobotConstants.AUTO_LCD_LOADER, 1, "SHOOTING1HOT                       ");
                 counter = 0;
                 didShoot = true;
-            }
-            else if (m_timer.get()>5) {
+            } else if (m_timer.get() > 5) {
                 extendLoader();
                 m_driverStation.println(RobotConstants.AUTO_LCD_LOADER, 1, "SHOOTING1COLD                       ");
                 counter = 0;
@@ -133,12 +132,12 @@ public class AutoTwoBall extends AutoMode {
             }
         }
         //reset our loader after we are sure we have fired
-        if (step == 1 && counter > 100 && didShoot == true) {
+        if (step == 1 && counter > 100 && didShoot) {
             retractLoader();
             step = 2;       //next ball
             counter = 0;
         }
-        
+
         if (step == 2 && counter > 150) {
             //toggle intake on and leave on just in case ... maybe turn off but I would prefer not to
             enableRollers();
@@ -147,7 +146,7 @@ public class AutoTwoBall extends AutoMode {
             step = 3;
         }
         if (step == 3 && counter > 100) {
-           
+
             //vision for second goal as double check (only takes little while to process
             BinaryImage image = m_vision.getFilteredImage(camera, cc);
             if (m_vision.areParticles(image)) {
@@ -165,16 +164,14 @@ public class AutoTwoBall extends AutoMode {
                 m_driverStation.println(RobotConstants.AUTO_LCD_LOADER, 1, "SHOOTING2HOT                       ");
                 step = 4;
             }
-                         
+
             //failsafe
-             if (m_timer.get() > 8.5) {
+            if (m_timer.get() > 8.5) {
                 extendLoader();
                 m_driverStation.println(RobotConstants.AUTO_LCD_LOADER, 1, "SHOOTING2                       ");
                 step = 4;
-             }
+            }
         }
-        
-        
-        
+
     }
 }

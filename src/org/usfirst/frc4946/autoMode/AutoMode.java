@@ -85,18 +85,19 @@ public abstract class AutoMode {
         // basic p controller for turning to the correct angle and not overshooting  
         int threshold=2; //2 degree leanance 
         
-        if(angle==m_gyro.getAngle()&&threshold>Math.abs(angle-m_gyro.getAngle())){
+        if(threshold>Math.abs(angle-m_gyro.getAngle())){
             return true;
         }
-        int p=(int) (speed/180);
-        p=(int) (Math.abs(angle-m_gyro.getAngle())*p);
+        
+        double p = (Math.abs(angle-m_gyro.getAngle()) * speed / 180);
         if (angle>m_gyro.getAngle()+threshold){
-            drive(speed*p,-1);
+            drive(0,-p);          // Linear turning speed
+            //drive(0,-speed*p);    // Curved turning speed
         }
-        if (angle<m_gyro.getAngle()-threshold){
-            drive(speed*p,1);
+        else if (angle<m_gyro.getAngle()-threshold){
+            drive(0,p);          // Linear turning speed
+            //drive(0,speed*p);    // Curved turning speed
         }
-         drive(speed,1);
         
         return false;
     }

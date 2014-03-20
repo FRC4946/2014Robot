@@ -1,9 +1,9 @@
 /*
  * Autonumous routine:
- *    1. start 90 degrees
- *    2. get second ball and face the goal
- *    3. drive forward to distance
- *    4. Shoot ball 1 hot(has failsafe)s
+ *    1. Start 90 degrees
+ *    2. Get second ball and face the goal
+ *    3. Drive forward to distance
+ *    4. Shoot ball 1 hot(has failsafe)
  *    5. Intake ball 2 and shoot hot(has failsafe)
  */
 package org.usfirst.frc4946.autoMode;
@@ -31,11 +31,11 @@ import org.usfirst.frc4946.vision.VisionConstants;
 public class AutoTwoBallWithTurning extends AutoMode {
 
     //AutoMode autoRoutine = new AutoMode(m_robotDrive, m_launcher, m_loader, m_intakeArm, m_distanceSensor);
-    int step = -1;
+    int step = -2;
     int counter = 0;
     int atDistanceCount = 0;
     double hotGoalOneTime = 0.0;
-    double shootTime = 0.0;
+    boolean didShoot = false;
     TargetReport m_target = new TargetReport();
 
     Vision m_vision = new Vision();
@@ -59,10 +59,11 @@ public class AutoTwoBallWithTurning extends AutoMode {
         cc.addCriteria(NIVision.MeasurementType.IMAQ_MT_AREA, VisionConstants.AREA_MINIMUM, 65535, false);
 
         initGyroSensor();
-        step = -1;
+        step = -2;
         counter = 0;
         atDistanceCount = 0;
         hotGoalOneTime = 0.0;
+        didShoot = false;
 
         extendArm();
 
@@ -81,9 +82,9 @@ public class AutoTwoBallWithTurning extends AutoMode {
         if (m_timer.get() > 0.1) {
             step = -1;
         }
-        if (step==-1){
-            if (turnToAngle(1,45)){
-                step=0;
+        if (step == -1) {
+            if (turnToAngle(1, 45)) {
+                step = 0;
             }
         }
         if (step == 0) {
@@ -119,35 +120,29 @@ public class AutoTwoBallWithTurning extends AutoMode {
             }
             // end vision
         }
-            //shoot after ball has settled 
+        //shoot after ball has settled 
         //check the time we are shooting at and know if it's hot or not
         if (step == 1 && counter > 100) {
             hotGoalOneTime = m_timer.get();
             if (m_target.Hot) {
                 extendLoader();
-                shootTime = m_timer.get();
-                counter = 0;
-            }
-            if (m_timer.get()>5) {
-                extendLoader();
-                shootTime = m_timer.get();
-                counter = 0;
-            }
-            if (shootTime <= 5.0) {
                 m_driverStation.println(RobotConstants.AUTO_LCD_LOADER, 1, "SHOOTING1HOT                       ");
-                shootTime =+ 0.15;
-            } else {
+                counter = 0;
+                didShoot = true;
+            } else if (m_timer.get() > 5) {
+                extendLoader();
                 m_driverStation.println(RobotConstants.AUTO_LCD_LOADER, 1, "SHOOTING1COLD                       ");
-                shootTime =+ 0.15;
+                counter = 0;
+                didShoot = true;
             }
         }
         //reset our loader after we are sure we have fired
-        if (step == 1 && m_timer.get() > shootTime && shooterIsAtTargetSpeed(1425)) {
-            retractArm();
+        if (step == 1 && counter > 100 && didShoot) {
+            retractLoader();
             step = 2;       //next ball
             counter = 0;
         }
-        
+
         if (step == 2 && counter > 150) {
             //toggle intake on and leave on just in case ... maybe turn off but I would prefer not to
             enableRollers();
@@ -156,7 +151,7 @@ public class AutoTwoBallWithTurning extends AutoMode {
             step = 3;
         }
         if (step == 3 && counter > 100) {
-           
+
             //vision for second goal as double check (only takes little while to process
             BinaryImage image = m_vision.getFilteredImage(camera, cc);
             if (m_vision.areParticles(image)) {
@@ -171,18 +166,17 @@ public class AutoTwoBallWithTurning extends AutoMode {
             /// vision end
             if (m_target.Hot) {
                 extendLoader();
-                shootTime = m_timer.get();
                 m_driverStation.println(RobotConstants.AUTO_LCD_LOADER, 1, "SHOOTING2HOT                       ");
+                step = 4;
             }
-                         
+
             //failsafe
-             if (shootTime > 8.5) {
+            if (m_timer.get() > 8.5) {
                 extendLoader();
                 m_driverStation.println(RobotConstants.AUTO_LCD_LOADER, 1, "SHOOTING2                       ");
+                step = 4;
             }
         }
-        
-        
-        
+
     }
 }
