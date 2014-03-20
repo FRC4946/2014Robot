@@ -1,9 +1,10 @@
 /*
  * Autonumous routine:
- *    1. Shoot the first ball
- *    2. Pick up second car
- *    3. Shoot the second ball
- *    4. Move forwards, until 8 feet away
+ *    1. start 90 degrees
+ *    2. get second ball and face the goal
+ *    3. drive forward to distance
+ *    4. Shoot ball 1 hot(has failsafe)s
+ *    5. Intake ball 2 and shoot hot(has failsafe)
  */
 package org.usfirst.frc4946.autoMode;
 
