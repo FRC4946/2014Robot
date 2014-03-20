@@ -6,6 +6,7 @@ package org.usfirst.frc4946.autoMode;
 
 import edu.wpi.first.wpilibj.DriverStationLCD;
 import edu.wpi.first.wpilibj.Gyro;
+import edu.wpi.first.wpilibj.PIDController;
 import edu.wpi.first.wpilibj.RobotDrive;
 import org.usfirst.frc4946.DistanceSensor;
 import org.usfirst.frc4946.IntakeArm;
@@ -24,9 +25,9 @@ public abstract class AutoMode {
     Loader m_loader;
     IntakeArm m_intakeArm;
     DistanceSensor m_distanceSensor;
-    Gyro m_gyro;
-    protected DriverStationLCD m_driverStation = DriverStationLCD.getInstance();
 
+    protected DriverStationLCD m_driverStation = DriverStationLCD.getInstance();
+    Gyro m_gyro = new Gyro(RobotConstants.GYRO_SENSOR);
 
     AutoMode(RobotDrive drive, Launcher launcher, Loader loader, IntakeArm intakeArm, DistanceSensor distanceSensor, Gyro gyro) {
         m_robotDrive = drive;
@@ -40,9 +41,9 @@ public abstract class AutoMode {
     protected void resetGyro(){
         m_gyro.reset();
     }
-    
+
     protected boolean shooterIsAtTargetSpeed(double speed) {
-        return getCurrentShooterSpeed() >= (speed-50) && getCurrentShooterSpeed() <= (speed+50);
+        return getCurrentShooterSpeed() >= (speed - 50) && getCurrentShooterSpeed() <= (speed + 50);
 
     }
 
@@ -56,7 +57,7 @@ public abstract class AutoMode {
             drive(speed, correctedAngle);
         }
         //if (currentDistance <= distance && RobotConstants.DISTANCE_SENSOR_RANGE <= Math.abs(currentDistance - distance)) {
-          //  drive(-speed, 0);
+        //  drive(-speed, 0);
         //}
 
     }
@@ -79,8 +80,27 @@ public abstract class AutoMode {
 
     }
 
-    public void turnToAngle() {
+    public boolean turnToAngle(double speed,int angle) {
         //needs work, potentially use the gyro,compass, combo part we have?
+        
+        // basic p controller for turning to the correct angle and not overshooting  
+        int threshold=2; //2 degree leanance 
+        
+        if(threshold>Math.abs(angle-m_gyro.getAngle())){
+            return true;
+        }
+        
+        double p = (Math.abs(angle-m_gyro.getAngle()) * speed / 180);
+        if (angle>m_gyro.getAngle()+threshold){
+            drive(0,-p);          // Linear turning speed
+            //drive(0,-speed*p);    // Curved turning speed
+        }
+        else if (angle<m_gyro.getAngle()-threshold){
+            drive(0,p);          // Linear turning speed
+            //drive(0,speed*p);    // Curved turning speed
+        }
+        
+        return false;
     }
 
     public void updateShooter(boolean closedLoop) {
@@ -119,7 +139,7 @@ public abstract class AutoMode {
         m_intakeArm.setExtended(true);
         m_intakeArm.updateSolenoids();
     }
-    
+
     public void retractArm() {
         m_intakeArm.setExtended(false);
         m_intakeArm.updateSolenoids();

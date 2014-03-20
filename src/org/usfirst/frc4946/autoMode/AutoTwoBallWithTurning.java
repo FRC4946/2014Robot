@@ -1,13 +1,13 @@
 /*
  * Autonumous routine:
- *    1. Drive to distance (drop intake to drag/carry ball)
- *    2. Check hot(if hot shoot)
- *    3. Intake second ball
- *    4. Move forwards, until 8 feet away
+ *    1. Start 90 degrees
+ *    2. Get second ball and face the goal
+ *    3. Drive forward to distance
+ *    4. Shoot ball 1 hot(has failsafe)
+ *    5. Intake ball 2 and shoot hot(has failsafe)
  */
 package org.usfirst.frc4946.autoMode;
 
-import edu.wpi.first.wpilibj.Gyro;
 import edu.wpi.first.wpilibj.RobotDrive;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.camera.AxisCamera;
@@ -28,10 +28,10 @@ import org.usfirst.frc4946.vision.VisionConstants;
  *
  * @author Stefan
  */
-public class AutoTwoBall extends AutoMode {
+public class AutoTwoBallWithTurning extends AutoMode {
 
     //AutoMode autoRoutine = new AutoMode(m_robotDrive, m_launcher, m_loader, m_intakeArm, m_distanceSensor);
-    int step = -1;
+    int step = -2;
     int counter = 0;
     int atDistanceCount = 0;
     double hotGoalOneTime = 0.0;
@@ -45,14 +45,12 @@ public class AutoTwoBall extends AutoMode {
 
     Timer m_timer = new Timer();
 
-    public AutoTwoBall(RobotDrive drive, Launcher launcher, Loader loader, IntakeArm intakeArm, DistanceSensor distanceSensor, Gyro gyro) {
-        super(drive, launcher, loader, intakeArm, distanceSensor, gyro);
+    public AutoTwoBallWithTurning(RobotDrive drive, Launcher launcher, Loader loader, IntakeArm intakeArm, DistanceSensor distanceSensor) {
+        super(drive, launcher, loader, intakeArm, distanceSensor);
     }
 
     public void init() {
 
-        resetGyro();
-        
         m_timer.reset();
         m_timer.start();
 
@@ -60,7 +58,8 @@ public class AutoTwoBall extends AutoMode {
         cc = new CriteriaCollection();      // create the criteria for the particle filter
         cc.addCriteria(NIVision.MeasurementType.IMAQ_MT_AREA, VisionConstants.AREA_MINIMUM, 65535, false);
 
-        step = -1;
+        initGyroSensor();
+        step = -2;
         counter = 0;
         atDistanceCount = 0;
         hotGoalOneTime = 0.0;
@@ -77,14 +76,19 @@ public class AutoTwoBall extends AutoMode {
         m_launcher.update();
         counter++;
         m_driverStation.println(RobotConstants.AUTO_LCD_INTAKE, 1, "Dist " + m_distanceSensor.getRangeInchs() + "                          ");
-        if (step == -1) {
+        if (step == -2) {
             enableRollers();
         }
         if (m_timer.get() > 0.1) {
-            step = 0;
+            step = -1;
+        }
+        if (step == -1) {
+            if (turnToAngle(1, 45)) {
+                step = 0;
+            }
         }
         if (step == 0) {
-            driveToDistance(9 * 12, 0.75);
+            driveToDistance(9 * 12, 0.4);
         }
 
         if (atDistance(9 * 12) && step == 0) {
@@ -116,7 +120,6 @@ public class AutoTwoBall extends AutoMode {
             }
             // end vision
         }
-
         //shoot after ball has settled 
         //check the time we are shooting at and know if it's hot or not
         if (step == 1 && counter > 100) {
