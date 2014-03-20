@@ -34,7 +34,7 @@ public class AutoTwoBall extends AutoMode {
     int counter = 0;
     int atDistanceCount = 0;
     double hotGoalOneTime = 0.0;
-    double shootTime = 0.0;
+    boolean didShoot = false;
     TargetReport m_target = new TargetReport();
 
     Vision m_vision = new Vision();
@@ -62,6 +62,7 @@ public class AutoTwoBall extends AutoMode {
         counter = 0;
         atDistanceCount = 0;
         hotGoalOneTime = 0.0;
+        didShoot = false;
 
         extendArm();
 
@@ -113,31 +114,27 @@ public class AutoTwoBall extends AutoMode {
             }
             // end vision
         }
-            //shoot after ball has settled 
+        
+        //shoot after ball has settled 
         //check the time we are shooting at and know if it's hot or not
         if (step == 1 && counter > 100) {
             hotGoalOneTime = m_timer.get();
             if (m_target.Hot) {
                 extendLoader();
-                shootTime = m_timer.get();
-                counter = 0;
-            }
-            if (m_timer.get()>5) {
-                extendLoader();
-                shootTime = m_timer.get();
-                counter = 0;
-            }
-            if (shootTime <= 5.0) {
                 m_driverStation.println(RobotConstants.AUTO_LCD_LOADER, 1, "SHOOTING1HOT                       ");
-                shootTime =+ 0.15;
-            } else {
+                counter = 0;
+                didShoot = true;
+            }
+            else if (m_timer.get()>5) {
+                extendLoader();
                 m_driverStation.println(RobotConstants.AUTO_LCD_LOADER, 1, "SHOOTING1COLD                       ");
-                shootTime =+ 0.15;
+                counter = 0;
+                didShoot = true;
             }
         }
         //reset our loader after we are sure we have fired
-        if (step == 1 && m_timer.get() > shootTime && shooterIsAtTargetSpeed(1425)) {
-            retractArm();
+        if (step == 1 && counter > 100 && didShoot == true) {
+            retractLoader();
             step = 2;       //next ball
             counter = 0;
         }
@@ -165,15 +162,16 @@ public class AutoTwoBall extends AutoMode {
             /// vision end
             if (m_target.Hot) {
                 extendLoader();
-                shootTime = m_timer.get();
                 m_driverStation.println(RobotConstants.AUTO_LCD_LOADER, 1, "SHOOTING2HOT                       ");
+                step = 4;
             }
                          
             //failsafe
-             if (shootTime > 8.5) {
+             if (m_timer.get() > 8.5) {
                 extendLoader();
                 m_driverStation.println(RobotConstants.AUTO_LCD_LOADER, 1, "SHOOTING2                       ");
-            }
+                step = 4;
+             }
         }
         
         
