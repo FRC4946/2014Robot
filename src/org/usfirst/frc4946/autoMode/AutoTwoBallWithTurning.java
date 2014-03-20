@@ -8,6 +8,7 @@
  */
 package org.usfirst.frc4946.autoMode;
 
+import edu.wpi.first.wpilibj.Gyro;
 import edu.wpi.first.wpilibj.RobotDrive;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.camera.AxisCamera;
@@ -45,12 +46,14 @@ public class AutoTwoBallWithTurning extends AutoMode {
 
     Timer m_timer = new Timer();
 
-    public AutoTwoBallWithTurning(RobotDrive drive, Launcher launcher, Loader loader, IntakeArm intakeArm, DistanceSensor distanceSensor) {
-        super(drive, launcher, loader, intakeArm, distanceSensor);
+    public AutoTwoBallWithTurning(RobotDrive drive, Launcher launcher, Loader loader, IntakeArm intakeArm, DistanceSensor distanceSensor, Gyro gyro) {
+        super(drive, launcher, loader, intakeArm, distanceSensor, gyro);
     }
 
     public void init() {
 
+        resetGyro();
+        
         m_timer.reset();
         m_timer.start();
 
@@ -58,7 +61,6 @@ public class AutoTwoBallWithTurning extends AutoMode {
         cc = new CriteriaCollection();      // create the criteria for the particle filter
         cc.addCriteria(NIVision.MeasurementType.IMAQ_MT_AREA, VisionConstants.AREA_MINIMUM, 65535, false);
 
-        initGyroSensor();
         step = -2;
         counter = 0;
         atDistanceCount = 0;
@@ -178,5 +180,9 @@ public class AutoTwoBallWithTurning extends AutoMode {
             }
         }
 
+    }
+    
+    public void giveCamera(AxisCamera newCamera) {
+        camera = newCamera;
     }
 }

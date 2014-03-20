@@ -176,4 +176,8 @@ public class AutoTwoBall extends AutoMode {
         }
 
     }
+    
+    public void giveCamera(AxisCamera newCamera) {
+        camera = newCamera;
+    }
 }

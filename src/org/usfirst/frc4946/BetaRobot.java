@@ -85,13 +85,18 @@ public class BetaRobot extends SimpleRobot {
         m_driverStation.println(RobotConstants.LCD_MODE_MISC, 1, "Entering autonomous                    ");
         m_driverStation.updateLCD();
 
-        //AutoTwoBall m_routine = new AutoTwoBall(m_robotDrive, m_launcher, m_loader, m_intakeArm, m_distanceSensor);
-        //AutoShootAndDrive m_routine = new AutoShootAndDrive(m_robotDrive,m_launcher,m_loader,m_intakeArm,m_distanceSensor);
-        AutoVision_MoveAndShoot m_routine = new AutoVision_MoveAndShoot(m_robotDrive,m_launcher,m_loader,m_intakeArm,m_distanceSensor);
-        //AutoMove m_routine = new AutoMove(m_robotDrive,m_launcher,m_loader,m_intakeArm,m_distanceSensor);
+        //AutoMove m_routine = new AutoMove(m_robotDrive,m_launcher,m_loader,m_intakeArm,m_distanceSensor,m_gyro);
+        //AutoMoveAndShoot m_routine = new AutoMoveAndShoot(m_robotDrive, m_launcher, m_loader, m_intakeArm, m_distanceSensor, m_gyro);
+        //AutoShootAndDrive m_routine = new AutoShootAndDrive(m_robotDrive,m_launcher,m_loader,m_intakeArm,m_distanceSensor,m_gyro);
+        //AutoVision_MoveAndShoot m_routine = new AutoVision_MoveAndShoot(m_robotDrive,m_launcher,m_loader,m_intakeArm,m_distanceSensor,m_gyro);
+        
+        AutoTwoBall m_routine = new AutoTwoBall(m_robotDrive, m_launcher, m_loader, m_intakeArm, m_distanceSensor, m_gyro);
+        //AutoTwoBallWithTurning m_routine = new AutoTwoBallWithTurning(m_robotDrive, m_launcher, m_loader, m_intakeArm, m_distanceSensor, m_gyro);
+
         int m_cycleNumber = 0;
         m_routine.init();
         
+        // ************ COMMENT THIS LINE IF NOT USING A VISION ASSISTED AUTO ************
         m_routine.giveCamera(camera);
         
         while (isAutonomous() && isEnabled()) {
