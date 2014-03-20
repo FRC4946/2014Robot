@@ -16,9 +16,11 @@ public class IntakeArm {
     DriverStationLCD m_driverStationLCD = DriverStationLCD.getInstance();
     
     //private double speed = 0.0;
+    private boolean old_MotorsAreEnabled = false;
     private boolean motorsAreEnabled = false;
     private boolean armIsExtended = false;
-
+    private boolean rollersAreReversed = false;
+    
     private int m_solenoidCounter = 0;
 
     private final DriverStation m_driverStation;
@@ -85,7 +87,9 @@ public class IntakeArm {
     
     public void toggleEnabled() {
         motorsAreEnabled = !motorsAreEnabled;
+        old_MotorsAreEnabled = motorsAreEnabled;
 
+        rollersAreReversed = false;
         setEnabledRollers(motorsAreEnabled);
     }
 
@@ -99,18 +103,9 @@ public class IntakeArm {
 
         motorsAreEnabled = isEnabled;
 
-        if (isEnabled) {
+        if (isEnabled && !rollersAreReversed) {
             m_intakeController.set(1.0);
-        } else {
-            m_intakeController.set(0.0);
-        }
-
-    }
-    public void setEnabledRollersReverse(boolean isEnabled) {
-
-        motorsAreEnabled = isEnabled;
-
-        if (isEnabled) {
+        }else if (isEnabled && rollersAreReversed) {
             m_intakeController.set(-1.0);
         } else {
             m_intakeController.set(0.0);
@@ -118,8 +113,20 @@ public class IntakeArm {
 
     }
 
-    
-    
+    public void reverseRollers(boolean isReversed){
+        rollersAreReversed = isReversed;
+        if (isReversed) {
+            old_MotorsAreEnabled = motorsAreEnabled;
+            setEnabledRollers(true);
+        } else {
+            motorsAreEnabled = old_MotorsAreEnabled;
+            setEnabledRollers(motorsAreEnabled);
+        }
+
+
+    }
+
+
 //    /**
 //     * Set the speed of the motors without checking the result. After calling
 //     * this, call setEnabled(true) to update the motors.
