@@ -85,7 +85,7 @@ public class AutoTwoBallWithTurning extends AutoMode {
             step = -1;
         }
         if (step == -1) {
-            if (turnToAngle(1, 45)) {
+            if (turnToAngle(45)) {
                 step = 0;
             }
         }
@@ -154,34 +154,14 @@ public class AutoTwoBallWithTurning extends AutoMode {
         }
         if (step == 3 && counter > 100) {
 
-            //vision for second goal as double check (only takes little while to process
-            BinaryImage image = m_vision.getFilteredImage(camera, cc);
-            if (m_vision.areParticles(image)) {
-                m_vision.detectTargets(image);
-                m_target = m_vision.getBestTarget(image);
-            }
-            try {
-                image.free();
-            } catch (NIVisionException ex) {
-                ex.printStackTrace();
-            }
-            /// vision end
-            if (m_target.Hot) {
-                extendLoader();
-                m_driverStation.println(RobotConstants.AUTO_LCD_LOADER, 1, "SHOOTING2HOT                       ");
-                step = 4;
-            }
+            extendLoader();
+            m_driverStation.println(RobotConstants.AUTO_LCD_LOADER, 1, "SHOOTING2HOT                       ");
+            step = 4;
 
-            //failsafe
-            if (m_timer.get() > 8.5) {
-                extendLoader();
-                m_driverStation.println(RobotConstants.AUTO_LCD_LOADER, 1, "SHOOTING2                       ");
-                step = 4;
-            }
         }
 
     }
-    
+
     public void giveCamera(AxisCamera newCamera) {
         camera = newCamera;
     }

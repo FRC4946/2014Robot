@@ -51,8 +51,8 @@ public abstract class AutoMode {
         double currentDistance = m_distanceSensor.getRangeInchs();
 
         if (currentDistance >= distance && RobotConstants.DISTANCE_SENSOR_RANGE <= Math.abs(currentDistance - distance)) {
-            double angle = m_gyro.getAngle();
-            double correctedAngle = angle*-0.03;
+            double angleErr = m_gyro.getAngle()-0;
+            double correctedAngle = -angleErr*0.03;
 
             drive(speed, correctedAngle);
         }
@@ -80,26 +80,18 @@ public abstract class AutoMode {
 
     }
 
-    public boolean turnToAngle(double speed,int angle) {
-        //needs work, potentially use the gyro,compass, combo part we have?
-        
+    public boolean turnToAngle(int tarAngle) {        
         // basic p controller for turning to the correct angle and not overshooting  
         int threshold=2; //2 degree leanance 
-        
-        if(threshold>Math.abs(angle-m_gyro.getAngle())){
+        if(threshold>Math.abs(tarAngle-m_gyro.getAngle())){
             return true;
         }
-        
-        double p = (Math.abs(angle-m_gyro.getAngle()) * speed / 180);
-        if (angle>m_gyro.getAngle()+threshold){
-            drive(0,-p);          // Linear turning speed
-            //drive(0,-speed*p);    // Curved turning speed
-        }
-        else if (angle<m_gyro.getAngle()-threshold){
-            drive(0,p);          // Linear turning speed
-            //drive(0,speed*p);    // Curved turning speed
-        }
-        
+
+        double angleErr = m_gyro.getAngle() - tarAngle;
+        double correctedAngle = -angleErr * 0.03;
+
+        drive(0, correctedAngle);
+
         return false;
     }
 

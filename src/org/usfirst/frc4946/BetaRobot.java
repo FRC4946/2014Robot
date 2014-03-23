@@ -41,7 +41,7 @@ public class BetaRobot extends SimpleRobot {
 
     Timer m_timer = new Timer();
 
-    Gyro m_gyro = new Gyro(RobotConstants.GYRO_SENSOR);
+    Gyro m_gyro;
 
     AxisCamera camera;
     
@@ -74,7 +74,7 @@ public class BetaRobot extends SimpleRobot {
         // Set the speed of the motors on the launcher and intake
         //m_intakeArm.setSpeedOpenLoop(12);
         m_launcher.setSpeedOpenLoop(3);
-
+        m_gyro = new Gyro(RobotConstants.GYRO_SENSOR);
     }
 
     /**

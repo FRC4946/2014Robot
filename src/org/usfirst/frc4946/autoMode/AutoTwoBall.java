@@ -140,39 +140,17 @@ public class AutoTwoBall extends AutoMode {
             counter = 0;
         }
 
-        if (step == 2 && counter > 150) {
+        if (step == 2 && counter > 100) {
             //toggle intake on and leave on just in case ... maybe turn off but I would prefer not to
             enableRollers();
             //if limitswitchs check that ball is in robot.
             counter = 0;
             step = 3;
         }
-        if (step == 3 && counter > 100) {
-
-            //vision for second goal as double check (only takes little while to process
-            BinaryImage image = m_vision.getFilteredImage(camera, cc);
-            if (m_vision.areParticles(image)) {
-                m_vision.detectTargets(image);
-                m_target = m_vision.getBestTarget(image);
-            }
-            try {
-                image.free();
-            } catch (NIVisionException ex) {
-                ex.printStackTrace();
-            }
-            /// vision end
-            if (m_target.Hot) {
-                extendLoader();
-                m_driverStation.println(RobotConstants.AUTO_LCD_LOADER, 1, "SHOOTING2HOT                       ");
-                step = 4;
-            }
-
-            //failsafe
-            if (m_timer.get() > 8.5) {
-                extendLoader();
-                m_driverStation.println(RobotConstants.AUTO_LCD_LOADER, 1, "SHOOTING2                       ");
-                step = 4;
-            }
+        if (step == 3 && counter > 150) {
+            extendLoader();
+            m_driverStation.println(RobotConstants.AUTO_LCD_LOADER, 1, "SHOOTING2HOT                       ");
+            step = 4;
         }
 
     }
