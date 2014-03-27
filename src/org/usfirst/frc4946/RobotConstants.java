@@ -58,6 +58,7 @@ public class RobotConstants {
     public static int SHOOTER_MAX_VOLTAGE=7;
     public static int SHOOTER_MAX_RPM=5000;
     public static int DISTANCE_SENSOR_RANGE=8;
+    public static double SPEED_INCREMENT=0.01;
     
     
     public static Line LCD_LAUNCHER = DriverStationLCD.Line.kUser1;

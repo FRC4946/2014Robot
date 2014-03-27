@@ -38,6 +38,7 @@ public class AutoTwoBallWithTurning extends AutoMode {
     double hotGoalOneTime = 0.0;
     boolean didShoot = false;
     TargetReport m_target = new TargetReport();
+    double speed = 0.0;
 
     Vision m_vision = new Vision();
 
@@ -66,6 +67,7 @@ public class AutoTwoBallWithTurning extends AutoMode {
         atDistanceCount = 0;
         hotGoalOneTime = 0.0;
         didShoot = false;
+        speed = 0.0;
 
         extendArm();
 
@@ -90,7 +92,10 @@ public class AutoTwoBallWithTurning extends AutoMode {
             }
         }
         if (step == 0) {
-            driveToDistance(9 * 12, 0.4);
+            if (speed < 0.75) {
+                speed += RobotConstants.SPEED_INCREMENT;
+            }
+            driveToDistance(9 * 12, speed);
         }
 
         if (atDistance(9 * 12) && step == 0) {
