@@ -53,7 +53,6 @@ public class RobotConstants {
     public static int DISTANCE_SENSOR = 2;
       public static int HALL_SENSOR_TOP=4;
     public static int HALL_SENSOR_BOT=3;
-    public static int GYRO_SENSOR = 3;
     public static int SHOOTER_MAX_VOLTAGE=7;
     public static int SHOOTER_MAX_RPM=5000;
     public static int DISTANCE_SENSOR_RANGE=8;

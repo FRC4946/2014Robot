@@ -8,6 +8,7 @@
 
 package org.usfirst.frc4946.autoMode;
 
+import edu.wpi.first.wpilibj.Gyro;
 import edu.wpi.first.wpilibj.RobotDrive;
 import edu.wpi.first.wpilibj.camera.AxisCamera;
 import edu.wpi.first.wpilibj.image.BinaryImage;
@@ -70,28 +71,26 @@ public class AutoVision_MoveAndShoot extends AutoMode {
         m_launcher.update();
         counter++;
         m_driverStation.println(RobotConstants.AUTO_LCD_INTAKE, 1, "Dist " + m_distanceSensor.getRangeInchs()+"                          ");
-//        if (step == 0) {
-//            driveToDistance(9 * 12, 0.8);
-//        }
-//
-//        if (atDistance(9 * 12) && step == 0) {
-//            atDistanceCount++;
-//            if (atDistanceCount > 2) {
-//                drive(0.0, 0.0);
-//            }
-//        } else {
-//            atDistanceCount = 0;
-//
-//        }
-//
-//        if (atDistanceCount > 10 && step == 0) {
-//            step = 1;
-//            drive(0.0, 0.0);
-//            counter = 0;
-//            m_driverStation.println(RobotConstants.AUTO_LCD_LAUNCHER, 1, "BEGIN VISION PROCESSING               ");
-            
-        if(step == 0){
+        if (step == 0) {
+            driveToDistance(9 * 12, 0.6);
+        }
+
+        if (atDistance(9 * 12) && step == 0) {
+            atDistanceCount++;
+            if (atDistanceCount > 2) {
+                drive(0.0, 0.0);
+            }
+        } else {
+            atDistanceCount = 0;
+
+        }
+
+        if (atDistanceCount > 10 && step == 0) {
             step = 1;
+            drive(0.0, 0.0);
+            counter = 0;
+            m_driverStation.println(RobotConstants.AUTO_LCD_LAUNCHER, 1, "BEGIN VISION PROCESSING               ");
+
             BinaryImage image = m_vision.getFilteredImage(camera, cc);
             if (m_vision.areParticles(image)) {
                 
@@ -126,7 +125,7 @@ public class AutoVision_MoveAndShoot extends AutoMode {
             }
             
             // If the target was not hot, wait 5 seconds for the targets to switch and then GO GO GO!!!
-            else if (!m_target.Hot && m_timer.get() > 5){
+            else if (m_timer.get() > 5){
                 extendLoader();
                 m_driverStation.println(RobotConstants.AUTO_LCD_LOADER, 1, "SHOOTING2                       ");
             }

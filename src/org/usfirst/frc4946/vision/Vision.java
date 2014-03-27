@@ -41,8 +41,9 @@ public class Vision {
         try {
             ColorImage image = camera.getImage();     // comment if using stored images
             //ColorImage image = new RGBImage("/testImage.jpg");		// get the sample image from the cRIO flash
+            image.write("/northbay.bmp");
             BinaryImage thresholdImage = image.thresholdHSV(0, 255, 0, 255, 176, 255);   // keep only green objects
-            //thresholdImage.write("/threshold.bmp");
+            thresholdImage.write("/threshold.bmp");
             filteredImage = thresholdImage.particleFilter(criteria);           // filter out small particles
             filteredImage.write("/filteredImage.bmp");
 
