@@ -18,7 +18,8 @@ public class IntakeArm {
     //private double speed = 0.0;
     private boolean motorsAreEnabled = false;
     private boolean armIsExtended = false;
-
+    private boolean rollersAreReversed = false;
+    
     private int m_solenoidCounter = 0;
 
     private final DriverStation m_driverStation;
@@ -86,6 +87,7 @@ public class IntakeArm {
     public void toggleEnabled() {
         motorsAreEnabled = !motorsAreEnabled;
 
+        rollersAreReversed = false;
         setEnabledRollers(motorsAreEnabled);
     }
 
@@ -99,18 +101,9 @@ public class IntakeArm {
 
         motorsAreEnabled = isEnabled;
 
-        if (isEnabled) {
+        if (isEnabled && !rollersAreReversed) {
             m_intakeController.set(1.0);
-        } else {
-            m_intakeController.set(0.0);
-        }
-
-    }
-    public void setEnabledRollersReverse(boolean isEnabled) {
-
-        motorsAreEnabled = isEnabled;
-
-        if (isEnabled) {
+        }else if (isEnabled && rollersAreReversed) {
             m_intakeController.set(-1.0);
         } else {
             m_intakeController.set(0.0);
@@ -118,8 +111,18 @@ public class IntakeArm {
 
     }
 
-    
-    
+    public void reverseRollers(boolean isReversed){
+        rollersAreReversed = isReversed;
+        if (isReversed) {
+            setEnabledRollers(true);
+        } else {
+            setEnabledRollers(false);
+        }
+
+
+    }
+
+
 //    /**
 //     * Set the speed of the motors without checking the result. After calling
 //     * this, call setEnabled(true) to update the motors.
@@ -135,9 +138,5 @@ public class IntakeArm {
 //        //  speed = power;
 //        //}
 //    }
-
-    void reverseRollers(boolean trigger) {
-         
-    }
 
 }

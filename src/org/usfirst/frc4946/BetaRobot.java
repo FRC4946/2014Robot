@@ -37,9 +37,9 @@ public class BetaRobot extends SimpleRobot {
     DriverStationLCD m_driverStation = DriverStationLCD.getInstance();
 
     Timer m_timer = new Timer();
-    
+
     AxisCamera camera;
-    
+
     // The first arg is the pressure switch, which will open at 115 psi and reclose at 95. It's value will be used to activate and deactivate the relay.
     // The second is the compressor's relay (The Spike module). It is what turns on and off the compressor.
     Compressor m_primaryCompressor = new Compressor(RobotConstants.COMPRESSOR_PRESSURE_SWITCH, RobotConstants.COMPRESSOR_RELAY);
@@ -80,18 +80,18 @@ public class BetaRobot extends SimpleRobot {
 
         //AutoTwoBall m_routine = new AutoTwoBall(m_robotDrive, m_launcher, m_loader, m_intakeArm, m_distanceSensor);
         //AutoShootAndDrive m_routine = new AutoShootAndDrive(m_robotDrive,m_launcher,m_loader,m_intakeArm,m_distanceSensor);
-        AutoVision_MoveAndShoot m_routine = new AutoVision_MoveAndShoot(m_robotDrive,m_launcher,m_loader,m_intakeArm,m_distanceSensor);
+        AutoVision_MoveAndShoot m_routine = new AutoVision_MoveAndShoot(m_robotDrive, m_launcher, m_loader, m_intakeArm, m_distanceSensor);
         //AutoMove m_routine = new AutoMove(m_robotDrive,m_launcher,m_loader,m_intakeArm,m_distanceSensor);
         int m_cycleNumber = 0;
         m_routine.init();
-        
+
         m_routine.giveCamera(camera);
-        
+
         while (isAutonomous() && isEnabled()) {
 
             m_cycleNumber++;
             m_routine.run();
-            
+
             if ((m_cycleNumber % RobotConstants.CONSOLE_UPDATE_TIME) == 0) {
 
                 m_driverStation.updateLCD();
@@ -131,7 +131,7 @@ public class BetaRobot extends SimpleRobot {
                 m_driverStation.updateLCD();
                 m_cycleNumber = 0;
             }
-            
+
             Timer.delay(0.001);
         }
 
@@ -171,10 +171,12 @@ public class BetaRobot extends SimpleRobot {
                 && buttonIntakeRollerIsDown == true) {
 
             buttonIntakeRollerIsDown = false;
-            
-                m_intakeArm.toggleEnabled();
-            
+
+            m_intakeArm.toggleEnabled();
+
         }
+
+        m_intakeArm.reverseRollers(m_taskJoystick.getTrigger());
 
         //********* LOADER *********\\
         // If the trigger is down, lift the ball into the rollers		
@@ -222,11 +224,11 @@ public class BetaRobot extends SimpleRobot {
             modeRPM = true;
             launcherSpeed = 1500;
             speedIsPreset = true;
-           // m_intakeArm.setEnabledRollersReverse(true);
+            // m_intakeArm.setEnabledRollersReverse(true);
         } else if (m_taskJoystick.getRawButton(RobotConstants.JOYSTICK_BUTTON_LAUNCHER_PRESET_THREE)) {
             modeRPM = true;
-            //launcherSpeed = 1750;
-            launcherSpeed = 3000;
+            launcherSpeed = 1700;
+            //launcherSpeed = 3000;
             speedIsPreset = true;
         }
 
@@ -236,8 +238,6 @@ public class BetaRobot extends SimpleRobot {
             launcherSpeed = m_taskJoystick.getZ();
             oldLauncherSpeed = launcherSpeed;
         }
-
-        m_intakeArm.reverseRollers(m_taskJoystick.getTrigger());
 
         // Open loop  -  Set the speed with voltage
         if (modeRPM == false) {
@@ -285,9 +285,8 @@ public class BetaRobot extends SimpleRobot {
         outputMagnitude = outputMagnitude * (0.5 + 0.5 * driveSpeed); // 0.5 to 1.0
         curve = (curve * (0.7 + 0.2 * driveSpeed)) + 0.001; // 0.7 to 0.9
 
-        
-        m_driverStation.println(RobotConstants.LCD_LOADER, 1, "Curve: "+curve+"                      ");
-        
+        m_driverStation.println(RobotConstants.LCD_LOADER, 1, "Curve: " + curve + "                      ");
+
 //        if (m_driveJoystick.getTrigger()) {
 //            //allow fast speed, but reduce turning
 //            outputMagnitude *= 1.0;
