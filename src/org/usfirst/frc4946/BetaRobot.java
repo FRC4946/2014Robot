@@ -119,10 +119,10 @@ public class BetaRobot extends SimpleRobot {
             m_cycleNumber++;
 
             //Call the drive oriented code
-            //operatorDriveSystem();
+            operatorDriveSystem();
 
             //Call the task oriented code
-            //operatorTaskSystem();
+            operatorTaskSystem();
 
             m_driverStation.println(RobotConstants.LCD_RANGE, 1, "Range: " + m_distanceSensor.getRangeInchs() + "\"            ");
 
@@ -240,6 +240,7 @@ public class BetaRobot extends SimpleRobot {
         
         // If the trigger is down, brake. Otherwise, set the speed of the motors normally.
         if (m_taskJoystick.getTrigger()) {
+            
             m_launcher.setSpeedOpenLoop(0.5);
             m_launcher.setOpenLoopEnabled(m_launcher.isEnabled());
             m_driverStation.println(RobotConstants.LCD_DRIVER, 1, "Braking...                   ");
