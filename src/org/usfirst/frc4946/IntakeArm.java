@@ -113,13 +113,7 @@ public class IntakeArm {
 
     public void reverseRollers(boolean isReversed){
         rollersAreReversed = isReversed;
-        if (isReversed) {
-            setEnabledRollers(true);
-        } else {
-            setEnabledRollers(false);
-        }
-
-
+        setEnabledRollers(motorsAreEnabled);
     }
 
 
