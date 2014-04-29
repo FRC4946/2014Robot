@@ -13,7 +13,7 @@ import edu.wpi.first.wpilibj.Compressor;
 import edu.wpi.first.wpilibj.RobotDrive;
 import edu.wpi.first.wpilibj.SimpleRobot;
 import edu.wpi.first.wpilibj.Timer;
-import edu.wpi.first.wpilibj.camera.AxisCamera;
+//import edu.wpi.first.wpilibj.camera.AxisCamera;
 
 /**
  * The VM is configured to automatically run this class, and to call the
@@ -38,7 +38,7 @@ public class BetaRobot extends SimpleRobot {
 
     Timer m_timer = new Timer();
 
-    AxisCamera camera;
+    //AxisCamera camera;
 
     // The first arg is the pressure switch, which will open at 115 psi and reclose at 95. It's value will be used to activate and deactivate the relay.
     // The second is the compressor's relay (The Spike module). It is what turns on and off the compressor.
@@ -56,7 +56,7 @@ public class BetaRobot extends SimpleRobot {
     protected void robotInit() {
         // Start the compressor, let it do it's thing. It will turn on and off automatically to regulate pressure.
         m_primaryCompressor.start();
-        camera = AxisCamera.getInstance();
+        //camera = AxisCamera.getInstance();
     }
 
     /**
@@ -80,12 +80,12 @@ public class BetaRobot extends SimpleRobot {
 
         //AutoTwoBall m_routine = new AutoTwoBall(m_robotDrive, m_launcher, m_loader, m_intakeArm, m_distanceSensor);
         //AutoShootAndDrive m_routine = new AutoShootAndDrive(m_robotDrive,m_launcher,m_loader,m_intakeArm,m_distanceSensor);
-        AutoVision_MoveAndShoot m_routine = new AutoVision_MoveAndShoot(m_robotDrive, m_launcher, m_loader, m_intakeArm, m_distanceSensor);
+        AutoMoveAndShoot m_routine = new AutoMoveAndShoot(m_robotDrive, m_launcher, m_loader, m_intakeArm, m_distanceSensor);
         //AutoMove m_routine = new AutoMove(m_robotDrive,m_launcher,m_loader,m_intakeArm,m_distanceSensor);
         int m_cycleNumber = 0;
         m_routine.init();
 
-        m_routine.giveCamera(camera);
+        //m_routine.giveCamera(camera);
 
         while (isAutonomous() && isEnabled()) {
 
@@ -114,6 +114,11 @@ public class BetaRobot extends SimpleRobot {
 
         int m_cycleNumber = 0;
 
+        modeRPM = true;
+        launcherSpeed = 1700;
+        speedIsPreset = true;
+        oldLauncherSpeed = m_taskJoystick.getZ();
+        
         while (isOperatorControl() && isEnabled()) {
 
             m_cycleNumber++;
@@ -188,6 +193,9 @@ public class BetaRobot extends SimpleRobot {
         if (m_taskJoystick.getRawButton(RobotConstants.JOYSTICK_BUTTON_LAUNCHER_ON)) {
             if (modeRPM) {
                 m_launcher.setOpenLoopEnabled(true);
+                launcherSpeed = 1700;
+                speedIsPreset = true;
+                oldLauncherSpeed = m_taskJoystick.getZ();
             } else {
                 m_launcher.setClosedLoopEnabled(true);
             }
@@ -218,17 +226,16 @@ public class BetaRobot extends SimpleRobot {
         // Set the speed to the presets
         if (m_taskJoystick.getRawButton(RobotConstants.JOYSTICK_BUTTON_LAUNCHER_PRESET_ONE)) {
             modeRPM = true;
-            launcherSpeed = 1400;
+            launcherSpeed = 1700;
             speedIsPreset = true;
         } else if (m_taskJoystick.getRawButton(RobotConstants.JOYSTICK_BUTTON_LAUNCHER_PRESET_TWO)) {
             modeRPM = true;
-            launcherSpeed = 1500;
+            launcherSpeed = 1800;
             speedIsPreset = true;
             // m_intakeArm.setEnabledRollersReverse(true);
         } else if (m_taskJoystick.getRawButton(RobotConstants.JOYSTICK_BUTTON_LAUNCHER_PRESET_THREE)) {
             modeRPM = true;
-            launcherSpeed = 1700;
-            //launcherSpeed = 3000;
+            launcherSpeed = 1430;
             speedIsPreset = true;
         }
 

@@ -39,20 +39,21 @@ public class AutoMoveAndShoot extends AutoMode {
         retractArm();
 
         startShooter(true);
-        setShooterSpeed(1425, true);
-        m_driverStation.println(RobotConstants.AUTO_LCD_LAUNCHER, 1, "SHOOTER ON 1425               ");
+        setShooterSpeed(1430, true);
+        m_driverStation.println(RobotConstants.AUTO_LCD_LAUNCHER, 1, "SHOOTER ON 1700               ");
     }
 
     public void run() {
+        setShooterSpeed(1430, true);
         m_launcher.update();
         counter++;
         m_driverStation.println(RobotConstants.AUTO_LCD_INTAKE, 1, "Dist " + m_distanceSensor.getRangeInchs()+"                          ");
         if (step == 0) {
-            driveToDistance(9 * 12, 0.4);
+            driveToDistance((8 * 12) + 5, 0.4);
 
         }
 
-        if (atDistance(9 * 12) && step == 0) {
+        if (atDistance((8 * 12) + 5) && step == 0) {
             atDistanceCount++;
             if (atDistanceCount > 2) {
                 drive(0.0, 0.0);
